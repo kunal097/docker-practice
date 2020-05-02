@@ -1,0 +1,29 @@
+version: '3.5'
+services:
+  mysql:
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'pybotdb'
+      MYSQL_ROOT_PASSWORD: 'pybot'
+      # MYSQL_HOST: localhost
+    container_name: 'task1-db'
+    ports:
+      - '3306:3306'
+    networks:
+      - hostnetwork
+  app:
+    image: djangoapp:pybot
+    build: .
+    container_name: 'task1-app'
+    ports:
+      - '8000:8000'
+    networks:
+      - hostnetwork
+
+    command: python3 manage.py runserver 0.0.0.0:8000
+
+networks:
+  hostnetwork:
+    external: true
